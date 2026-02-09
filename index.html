@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POC-7 CI/CD Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding-top: 60px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      width: 60%;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #38bdf8;
+    }
+    h1 { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🚀 POC-7 CI/CD Pipeline</h1>
+    <p><b>Toolchain:</b> GitHub Actions → Docker → Ansible</p>
+    <p><b>Status:</b> ✅ Deployed Successfully</p>
+    <p><b>Environment:</b> Production</p>
+    <p><b>Last Updated:</b> <span id="time"></span></p>
+  </div>
+
+  <script>
+    document.getElementById("time").innerHTML = new Date();
+  </script>
+</body>
+</html>
