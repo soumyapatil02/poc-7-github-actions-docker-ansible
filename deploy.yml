@@ -11,7 +11,7 @@
 
     - name: Pull latest code from GitHub
       git:
-        repo: 'https://github.com/YOUR-USERNAME/poc-7-github-actions-docker-ansible.git'
+        repo: 'https://github.com/soumyapatil02/poc-7-github-actions-docker-ansible.git'
         dest: /home/ec2-user/poc-7-github-actions-docker-ansible
         version: main
         force: yes
