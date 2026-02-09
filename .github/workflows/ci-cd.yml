@@ -19,5 +19,19 @@ jobs:
         username: ec2-user
         key: ${{ secrets.SSH_KEY }}
         script: |
+          # Navigate to your app directory
+          cd /home/ec2-user/poc-7-github-actions-docker-ansible
+          
+          # Pull latest code from GitHub
+          git pull origin main
+          
+          # Stop and remove old container
+          docker stop poc7-container || true
+          docker rm poc7-container || true
+          docker rmi poc7-image || true
+          
+          # Build new Docker image
           docker build -t poc7-image .
-          ansible-playbook deploy.yml
+          
+          # Run new container
+          docker run -d --name poc7-container --restart always -p 80:80 poc7-image
