@@ -1,0 +1,23 @@
+---
+- name: Deploy Docker Container to EC2
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+    - name: Stop old container if exists
+      shell: docker stop poc7-container || true
+
+    - name: Remove old container if exists
+      shell: docker rm poc7-container || true
+
+    - name: Remove old image if exists
+      shell: docker rmi poc7-image || true
+
+    - name: Build Docker image
+      shell: docker build -t poc7-image .
+      args:
+        chdir: /home/ec2-user/app
+
+    - name: Run new container
+      shell: docker run -d --name poc7-container --restart always -p 80:80 poc7-image
