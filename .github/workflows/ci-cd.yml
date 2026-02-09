@@ -1,4 +1,4 @@
-name: POC-7 CI-CD
+name: POC-7 CI-CD Multi-Server
 
 on:
   push:
@@ -12,26 +12,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: SSH & Deploy
-      uses: appleboy/ssh-action@v1
-      with:
-        host: ${{ secrets.PUBLIC_IP }}
-        username: ec2-user
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          # Navigate to your app directory
-          cd /home/ec2-user/poc-7-github-actions-docker-ansible
-          
-          # Pull latest code from GitHub
-          git pull origin main
-          
-          # Stop and remove old container
-          docker stop poc7-container || true
-          docker rm poc7-container || true
-          docker rmi poc7-image || true
-          
-          # Build new Docker image
-          docker build -t poc7-image .
-          
-          # Run new container
-          docker run -d --name poc7-container --restart always -p 80:80 poc7-image
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 3.89.58.145 >> ~/.ssh/known_hosts
+        ssh-keyscan -H 3.95.57.121 >> ~/.ssh/known_hosts
+
+    - name: Install Ansible
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible
+
+    - name: Deploy to All Servers
+      run: |
+        ansible-playbook -i inventory.ini deploy.yml
